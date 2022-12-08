@@ -1,0 +1,121 @@
+﻿lv,asg,card,amount,sentence,type0,type2,formula_order,story,type
+1,1,1,3,赤い花 が 3 本 さいています,e1,existence,1,combination,e1
+1,1,2,2,きいろい花 が 2 本 さいています,e1,existence,2,combination,e2
+1,1,3,0,"赤い花 と きいろい花 が
+あわせて ? 本 さいています",r1,combination,3,combination,r
+1,1,4,2,赤い花 が 2 本 さいています,e0,existence,2,combination,
+1,1,5,0,"赤い花 は きいろい花 より
+ ? 本 おおくさいています",r0,comp_more,3,combination,
+1,1,6,3,白い花 が 3 本 さいています,e0,existence,1,combination,
+1,2,1,7,赤いふうせん が 7 こ あります,e1,existence,1,combination,e1
+1,2,2,1,きいろいふうせん が 1 こ あります,e1,existence,2,combination,e2
+1,2,3,0,"赤いふうせん と きいろいふうせん が
+あわせて ? こ あります",r1,combination,3,combination,r
+1,2,4,1,赤いふうせん が 1 こ あります,e0,existence,2,combination,
+1,2,5,0,"赤いふうせん は きいろいふうせん より
+ ? こ おおいです",r0,comp_more,3,combination,
+1,2,6,7,白いふうせん が 7 こ あります,e0,existence,1,combination,
+1,3,1,5,りんご が 5 こ あります,e1,existence,1,combination,e1
+1,3,2,4,みかん が 4 こ あります,e1,existence,2,combination,e2
+1,3,3,0,"りんご と みかん が
+あわせて ? こ あります",r1,combination,3,combination,r
+1,3,4,4,りんご が 4 こ あります,e0,existence,2,combination,
+1,3,5,0,"りんご は みかん より
+ ? こ おおいです",r0,comp_more,3,combination,
+1,3,6,5,バナナ が 5 こ あります,e0,existence,1,combination,
+1,4,1,4,アルミかん が 4 こ あります,e1,existence,1,combination,e1
+1,4,2,3,スチールかん が 3 こ あります,e1,existence,2,combination,e2
+1,4,3,0,"アルミかん と スチールかん が
+あわせて ? こ あります",r1,combination,3,combination,r
+1,4,4,3,アルミかん が 3 こ あります,e0,existence,2,combination,
+1,4,5,0,"アルミかん は スチールかん より
+ ? こ おおいです",r0,comp_more,3,combination,
+1,4,6,4,ビン が 4 こ あります,e0,existence,1,combination,
+1,5,1,6,ふうとう が 6 つ あります,e1,existence,1,combination,e1
+1,5,2,1,カード が 1 つ あります,e1,existence,2,combination,e2
+1,5,3,0,"ふうとう と カード が
+あわせて ? つ あります",r1,combination,3,combination,r
+1,5,4,1,ふうとう が 1 つ あります,e0,existence,2,combination,
+1,5,5,0,"ふうとう は カード より
+ ? つ おおいです",r0,comp_more,3,combination,
+1,5,6,6,ペン が 6 つ あります,e0,existence,1,combination,
+2,1,1,3,赤い花 が 3 本 さいています,e1,existence,1,combination,e1
+2,1,2,0,きいろい花 が ? 本 さいています,e1,existence,2,combination,e2
+2,1,3,5,"赤い花 と きいろい花 が
+あわせて 5 本 さいています",r1,combination,3,combination,r
+2,1,4,0,赤い花 が ? 本 さいています,e0,existence,2,combination,
+2,1,5,5,"赤い花 は きいろい花 より
+ 5 本 おおくさいています",r0,comp_more,3,combination,
+2,1,6,3,白い花 が 3 本 さいています,e0,existence,1,combination,
+2,2,1,7,赤いふうせん が 7 こ あります,e1,existence,1,combination,e1
+2,2,2,0,きいろいふうせん が ? こ あります,e1,existence,2,combination,e2
+2,2,3,8,"赤いふうせん と きいろいふうせん が
+あわせて 8 こ あります",r1,combination,3,combination,r
+2,2,4,0,赤いふうせん が ? こ あります,e0,existence,2,combination,
+2,2,5,8,"赤いふうせん は きいろいふうせん より
+ 8 こ おおいです",r0,comp_more,3,combination,
+2,2,6,7,白いふうせん が 7 こ あります,e0,existence,1,combination,
+2,3,1,5,りんご が 5 こ あります,e1,existence,1,combination,e1
+2,3,2,0,みかん が ? こ あります,e1,existence,2,combination,e2
+2,3,3,9,"りんご と みかん が
+あわせて 9 こ あります",r1,combination,3,combination,r
+2,3,4,0,りんご が ? こ あります,e0,existence,2,combination,
+2,3,5,9,"りんご は みかん より
+ 9 こ おおいです",r0,comp_more,3,combination,
+2,3,6,5,バナナ が 5 こ あります,e0,existence,1,combination,
+2,4,1,4,アルミかん が 4 こ あります,e1,existence,1,combination,e1
+2,4,2,0,スチールかん が ? こ あります,e1,existence,2,combination,e2
+2,4,3,7,"アルミかん と スチールかん が
+あわせて 7 こ あります",r1,combination,3,combination,r
+2,4,4,0,アルミかん が ? こ あります,e0,existence,2,combination,
+2,4,5,7,"アルミかん は スチールかん より
+ 7 こ おおいです",r0,comp_more,3,combination,
+2,4,6,4,ビン が 4 こ あります,e0,existence,1,combination,
+2,5,1,6,ふうとう が 6 つ あります,e1,existence,1,combination,e1
+2,5,2,0,カード が ? つ あります,e1,existence,2,combination,e2
+2,5,3,10,"ふうとう と カード が
+あわせて 10 つ あります",r1,combination,4,combination,r
+2,5,4,0,ふうとう が ? つ あります,e0,existence,2,combination,
+2,5,5,10,"ふうとう は カード より
+ 10 つ おおいです",r0,comp_more,4,combination,
+2,5,6,6,ペン が 6 つ あります,e0,existence,1,combination,
+3,1,1,3,赤い花 が 3 本 さいています,e1,existence,2,combination,e1
+3,1,2,0,きいろい花 が ? 本 さいています,e1,existence,3,combination,e2
+3,1,3,5,"赤い花 と きいろい花 が
+あわせて 5 本 さいています",r1,combination,1,combination,r
+3,1,4,0,赤い花 が ? 本 さいています,e0,existence,3,combination,
+3,1,5,5,"赤い花 は きいろい花 より
+ 5 本 おおくさいています",r0,comp_more,1,combination,
+3,1,6,3,白い花 が 3 本 さいています,e0,existence,2,combination,
+3,2,1,7,赤いふうせん が 7 こ あります,e1,existence,2,combination,e1
+3,2,2,0,きいろいふうせん が ? こ あります,e1,existence,3,combination,e2
+3,2,3,8,"赤いふうせん と きいろいふうせん が
+あわせて 8 こ あります",r1,combination,1,combination,r
+3,2,4,0,赤いふうせん が ? こ あります,e0,existence,3,combination,
+3,2,5,8,"赤いふうせん は きいろいふうせん より
+ 8 こ おおいです",r0,comp_more,1,combination,
+3,2,6,7,白いふうせん が 7 こ あります,e0,existence,2,combination,
+3,3,1,5,りんご が 5 こ あります,e1,existence,2,combination,e1
+3,3,2,0,みかん が ? こ あります,e1,existence,3,combination,e2
+3,3,3,9,"りんご と みかん が
+あわせて 9 こ あります",r1,combination,1,combination,r
+3,3,4,0,りんご が ? こ あります,e0,existence,3,combination,
+3,3,5,9,"りんご は みかん より
+ 9 こ おおいです",r0,comp_more,1,combination,
+3,3,6,5,バナナ が 5 こ あります,e0,existence,2,combination,
+3,4,1,4,アルミかん が 4 こ あります,e1,existence,2,combination,e1
+3,4,2,0,スチールかん が ? こ あります,e1,existence,3,combination,e2
+3,4,3,7,"アルミかん と スチールかん が
+あわせて 7 こ あります",r1,combination,1,combination,r
+3,4,4,0,アルミかん が ? こ あります,e0,existence,3,combination,
+3,4,5,7,"アルミかん は スチールかん より
+ 7 こ おおいです",r0,comp_more,1,combination,
+3,4,6,4,ビン が 4 こ あります,e0,existence,2,combination,
+3,5,1,6,ふうとう が 6 つ あります,e1,existence,2,combination,e1
+3,5,2,0,カード が ? つ あります,e1,existence,3,combination,e2
+3,5,3,7,"ふうとう と カード が
+あわせて 7 つ あります",r1,combination,1,combination,r
+3,5,4,0,ふうとう が ? つ あります,e0,existence,3,combination,
+3,5,5,7,"ふうとう は カード より
+ 7 つ おおいです",r0,comp_more,1,combination,
+3,5,6,6,ペン が 6 つ あります,e0,existence,2,combination,
