@@ -105,7 +105,7 @@ for num1,file1 in enumerate(files1):
   df4 = df3.loc[df3['ope1']=='CHECK']
   df4.to_csv('log_check/monsakun_log_check_r_s'+str(fnum1)+'.csv')
   df4 = df4[df4['check']==1]
-  pd.crosstab([df4['relation_st'],df4['story_st']],[df4['q'],df4['jdg']]).to_csv('first_check/r_s_first_check_'+str(fnum1)+'.csv')
+  pd.crosstab([df4['relation_st'],df4['story_st'],df4['formula_st']],[df4['q'],df4['jdg']]).to_csv('first_check/r_s_first_check_'+str(fnum1)+'.csv')
   pd.crosstab([df4['relation_st'],df4['story_st']],df4['q'],margins=True).to_csv('first_check/r_s_first_check_no_jdg_'+str(fnum1)+'.csv')
   pd.crosstab([df4['relation_st'],df4['story_st'],df4['formula_st']],df4['q'],margins=True).to_csv('first_check/r_s_f_first_check_no_jdg_'+str(fnum1)+'.csv')
   pd.crosstab([df4['InputID']],df4['q'],margins=True).to_csv('InputID_q_'+str(fnum1)+'.csv')
@@ -146,6 +146,7 @@ for num1,file1 in enumerate(files1):
   df4 = pd.crosstab([df3['relation_st'],df3['story_st'],df3['formula_st']],df3['q'])
   df4.to_csv('first_check/r_s_f_first_check_do_all_no_sum_'+str(fnum1)+'.csv')
   pd.crosstab([df3['relation_st'],df3['story_st']],df3['q'],margins=True).to_csv('first_check/r_s_f_first_check_do_all_'+str(fnum1)+'.csv')
+  pd.crosstab([df3['relation_st'],df3['story_st'],df3['formula_st']],[df3['q'],df3['jdg']],margins=True).to_csv('first_check/r_s_f_first_all_jdg'+str(fnum1)+'.csv')
   fig, ax = plt.subplots(figsize=(10, 8))
 
 
