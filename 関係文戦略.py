@@ -133,7 +133,7 @@ for num1,file1 in enumerate(files1):
   
   
   file2 = 'InputID_q_'+str(fnum1)+'.csv'
-  print(file1,file2)
+  print(file1)
   df1 = pd.read_csv(file1,index_col=0)
   df2 = pd.read_csv(file2)
   df2 = remove_any_zero_row(df2)
