@@ -22,4 +22,5 @@ file = "log_check/log_strategy_each_value_02.csv"
 df = pd.read_csv(file,index_col=0)
 # display(df)
 vc = df['InputID'].value_counts()
-print(vc)
+vc = vc.rename('counts')
+df = pd.merge(df,vc,left_on='InputID',right_index=True)

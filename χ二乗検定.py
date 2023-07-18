@@ -54,10 +54,10 @@ for file1 in files:
     for i in range(len(df4)):
         ax.bar(df4.columns, df4.iloc[i], bottom=df4.iloc[:i].sum(),color=dict_colorlist[df4.index[i]])
         for j in range(len(df4.columns)):
-            plt.text(x=j+1,
-                        y=df4.iloc[:i, j].sum() + (df4.iloc[i, j] / 2),
-                        s=df4.iloc[i, j],
-                        ha='center',
+            plt.text(x=j+1, 
+                        y=df4.iloc[:i, j].sum() + (df4.iloc[i, j] / 2), 
+                        s=df4.iloc[i, j], 
+                        ha='center', 
                         va='bottom'
                     )
     ax.set(xlabel='q', ylabel='strategy')
@@ -92,7 +92,6 @@ for file1 in files:
     df3.to_csv('log_check/log_strategy_each_value_'+str(fnum1)+'.csv')
 
     df4 = pd.crosstab(df3['strategy'],df3['lv'])
-    df4.to_csv('strategy_lv/strategy_lv_2_'+str(fnum1)+'.csv')
 
     ig, ax = plt.subplots(figsize=(10,8))
     ax.xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -107,10 +106,10 @@ for file1 in files:
     for i in range(len(df4)):
         ax.bar(df4.columns, df4.iloc[i], bottom=df4.iloc[:i].sum(),color=dict_colorlist[df4.index[i]])
         for j in range(len(df4.columns)):
-            plt.text(x=j+1,
-                        y=df4.iloc[:i, j].sum() + (df4.iloc[i, j] / 2),
-                        s=df4.iloc[i, j],
-                        ha='center',
+            plt.text(x=j+1, 
+                        y=df4.iloc[:i, j].sum() + (df4.iloc[i, j] / 2), 
+                        s=df4.iloc[i, j], 
+                        ha='center', 
                         va='bottom'
                     )
     ax.set(xlabel='q', ylabel='strategy')
@@ -143,37 +142,36 @@ import statsmodels.stats.multitest as multi
 def residual_analysis(table: pd.DataFrame, p_value: int=0.05):
     """
     クロス集計結果に対して残差分析を実施し、指定したp値以下の組み合わせを取得するメソッド。
-
+    
     Parameters
     -------
     table : pd.DataFrame
         クロス集計結果。インデックス、カラム名を指定すること。
     p_value : int
         p値。
-
+    
     Returns
     -------
     pair list : list
         インデックス、カラム名の組み合わせtupleのlist
-
+    
     """
-
+    
     # numpy.arrayに変換
     np_data = np.array(data)
-
+    
     # カイ二乗検定
     chi_sqared, chi_p_value, df, exp = chi2_contingency(np_data,correction=False)
-    multi.multipletests(chi_p_value, alpha=0.05, method="holm")
-
+    multi.multipletests(chi_p_value, alpha=0.05, method="holm") 
     if chi_p_value < p_value:
         print(f'カイ二乗検定：有意水準{p_value}で有意差あり。({chi_p_value})')
     else:
         print(f'カイ二乗検定：有意水準{p_value}で有意差なし。({chi_p_value})')
-
+    f.close()
     # インデックスとカラム名
     index = data.index
     column = data.columns
-
+    
     # 行数と列数を取得
     row_num, col_num = np_data.shape
     # 合計
@@ -181,10 +179,10 @@ def residual_analysis(table: pd.DataFrame, p_value: int=0.05):
     # 行と列ごとの合計
     total_by_row = [np_data[i, :].sum() for i in range(row_num)]
     total_by_col = [np_data[:, i].sum() for i in range(col_num)]
-
+    
     # 期待値
     exp = np.array(exp)
-
+    
     pairs = list()
     # 期待値と残差分散を算出
     for i in range(row_num):
@@ -199,12 +197,14 @@ def residual_analysis(table: pd.DataFrame, p_value: int=0.05):
             if p <= p_value:
                 pairs.append((index[i], column[j]))
     return pairs
-
+dir = 'chi2_contingency'
+if not os.path.exists(dir):
+    os.mkdir(dir)
 files = glob.glob('log_check/log_strategy_each_value_??.csv')
 for file1 in files:
     df1 = pd.read_csv(file1)
     df2 = pd.crosstab(df1['strategy'],df1['lv'])
+    fnum1 = re.sub(r"\D","",file1)
     print(file1)
     data = df2
     print(residual_analysis(table=data, p_value=0.05))
-# %%
