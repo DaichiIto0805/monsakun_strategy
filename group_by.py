@@ -52,5 +52,5 @@ for num,file in enumerate(files):
 
     for i in solve_count:
         df1 = df[df['counts']==i]
-        df2 = pd.crosstab(df1['strategy'],df1['q'])
+        df2 = pd.crosstab(df1['strategy'],df1['q'],margins=True)
         df2.to_csv('strategy_per_solve_count/strategy_per_solve_count_'+str(fnum)+'_'+str(i)+'.csv')
