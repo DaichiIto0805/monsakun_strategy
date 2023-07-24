@@ -32,7 +32,6 @@ for num,file in enumerate(files):
     print("fnum=",fnum)
 
     df = pd.read_csv(file,index_col=0)
-    df = df[df['jdg']=='s']
     # 重複削除
     df = df.drop_duplicates(subset=['InputID','q'])
     # display(df)
@@ -57,35 +56,34 @@ for num,file in enumerate(files):
     df['strategy']=df['relation_st']+df['story_st']+df['formula_st']
     df.strategy[df.strategy=='']='n'
 
-    df.to_csv('monsakun_log_per_solve_counts/monsakun_log_per_solve_counts'+str(fnum)+'.csv')
+    df.to_csv('monsakun_log_per_solve_counts_fs/monsakun_log_per_solve_counts_fs_'+str(fnum)+'.csv')
+#%%
+files= glob.glob('log_check/monsakun_log_check_r_s??.csv')
+print(files)
+# モンサクンのチェックと戦略のファイル
+df1 = pd.read_csv('monsakun_log_per_solve_counts_fs/monsakun_log_per_solve_counts_fs_02.csv',index_col=0)
+df2 = pd.read_csv('monsakun_log_per_solve_counts_fs/monsakun_log_per_solve_counts_fs_03.csv',index_col=0)
+df3 = pd.read_csv('monsakun_log_per_solve_counts_fs/monsakun_log_per_solve_counts_fs_04.csv',index_col=0)
+df4 = pd.read_csv('monsakun_log_per_solve_counts_fs/monsakun_log_per_solve_counts_fs_05.csv',index_col=0)
 
-    for k in solve_count:
-        df1 = df[df['counts']==k]
-        df2 = pd.crosstab(df1['strategy'],df1['q'],margins=True)
-        df2.to_csv('strategy_per_solve_count/strategy_per_solve_count_'+str(fnum)+'_'+str(k)+'.csv')
+i=2
+for df in [df1,df2,df3,df4]:
+    df['q']=str(i)+'_'+df['q']
+    df.insert(4,'story_num',i)
+    i+=1
 
-        #積み上げ棒グラフ描画
-        df2 = pd.crosstab(df1['strategy'],df1['q'])
-        #積み上げ棒グラフ描画
-        ig, ax = plt.subplots(figsize=(10,8))
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        storategy_list = ['F*','n','r','s']
-        colorlist = mcolors.TABLEAU_COLORS.keys()
-        dict_colorlist = dict(zip(storategy_list,colorlist))
+df5 = pd.concat([df1,df2,df3,df4])
+df5 = df5.drop('counts',axis=1)
 
-        for i in range(len(df2)):
-            ax.bar(df2.columns, df2.iloc[i], bottom=df2.iloc[:i].sum(),color=dict_colorlist[df2.index[i]])
-            for j in range(len(df2.columns)):
-                plt.text(x=j+1,
-                            y=df2.iloc[:i, j].sum() + (df2.iloc[i, j] / 2),
-                            s=df2.iloc[i, j],
-                            ha='center',
-                            va='bottom'
-                        )
-        ax.set(xlabel='q', ylabel='strategy')
-        ax.legend(df2.index)
-        plt.title('first_check_strategy_lv_'+str(fnum)+'_'+str(k))
-        plt.savefig('strategy_per_solve_graphs/strategy_per_solve'+str(fnum)+'_'+str(k)+'.png')
-        plt.show()
+vc = df5['InputID'].value_counts()
+vc = vc.rename('counts')
+df5 = pd.merge(df5,vc,left_on='InputID',right_index=True)
+# vc = pd.unique(df['counts'])
+solve_count = pd.unique(df5['counts'])
 
+df5.to_csv('monsakun_log_per_solve_counts/monsakun_log_per_solve_counts_all.csv')
+df5 = df5[df5['counts']==60]
+df5['strategy_jdg'] = df5['strategy'].str.cat(df5['jdg'],sep='_')
+df = df5.pivot(index='InputID',columns='q',values='strategy_jdg')
+df.to_csv('strategy_all_cross/strategy_all_cross.csv')
 # %%
