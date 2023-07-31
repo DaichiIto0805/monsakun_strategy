@@ -82,8 +82,15 @@ df5 = pd.merge(df5,vc,left_on='InputID',right_index=True)
 solve_count = pd.unique(df5['counts'])
 
 df5.to_csv('monsakun_log_per_solve_counts/monsakun_log_per_solve_counts_all.csv')
-df5 = df5[df5['counts']==60]
+# df5 = df5[df5['counts']==60]
 df5['strategy_jdg'] = df5['strategy'].str.cat(df5['jdg'],sep='_')
+# df5 = df5.set_index(['InputID','counts'])
+# a = df5['InputID'].unique()
+df6 = df5.loc[:,['InputID','counts']]
+df6 = df6.drop_duplicates()
+df6 = df6.set_index('InputID')
 df = df5.pivot(index='InputID',columns='q',values='strategy_jdg')
+df = pd.merge(df6,df,how='left',left_index=True,right_index=True)
+df = df.sort_values('counts',ascending=False)
 df.to_csv('strategy_all_cross/strategy_all_cross.csv')
 # %%
