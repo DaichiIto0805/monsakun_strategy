@@ -154,7 +154,7 @@ k = 0
 for j in range(len(df_corate.columns)//18):
     df_ct = df_corate.iloc[:,j*18:j*18+18]
     df_ct = df_ct.dropna()
-    for i in range(len(df_t.columns)//6):
+    for i in range(len(df_ct.columns)//6):
         df_ctt = df_ct.iloc[:,i*6:i*6+6]
         if any(df_ctt.columns.values[0] == col for col in clus3col):
             p = 3
@@ -176,3 +176,43 @@ for j in range(len(df_corate.columns)//18):
         k = k+1
 df_cor_cl.to_csv('cluster_with_corate/cluster_all_corate.csv')
 df_cor_cl_cr.to_excel('cluster_with_corate/cluster_strategy_corate.xlsx')
+#%%----------------------------------------------------------------
+#クラスターのクラスター分析
+#デンドログラム作成
+p = 4
+df_cl_cl = pd.read_csv('cluster_with_corate/cluster_all_corate.csv',index_col=0)
+df_cl_cl = df_cl_cl.drop('counts',axis=1)
+cl3cl = ['cluster0(3)','cluster3(4)']
+for j in range(len(df_cl_cl.columns)//3):
+    df_clclct = df_cl_cl.iloc[:,j*3:j*3+3]
+    df_clclct = df_clclct.dropna()
+    if any(df_clclct.columns.values[0]==cl for cl in cl3cl):
+        p = 3
+    else:
+        p = 4
+    model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
+    # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
+    model = model.fit(df_clclct.values)
+    plot_dendrogram(model,truncate_mode='lastp',p=p)
+    plt.title(df_clclct.columns.values[0]+'with'+str(p)+'cluster')
+    plt.savefig('cluster_cluster/'+df_clclct.columns.values[0]+'_with_'+str(p)+'_cluster')
+    plt.show(df_clclct.columns.values[0]+str(p)+'cluster')
+    plt.clf()
+#%%
+#クラスター作成
+df_clclct_cl = pd.DataFrame(index=df_cl_cl.index,columns=[])
+
+for j in range(len(df_cl_cl.columns)//3):
+    df_clclct = df_cl_cl.iloc[:,j*3:j*3+3]
+    df_clclct = df_clclct.dropna()
+    if any(df_clclct.columns.values[0]==cl for cl in cl3cl):
+        p = 3
+    else:
+        p = 4
+    model = AgglomerativeClustering(n_clusters=p)
+    # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
+    model = model.fit(df_clclct.values)
+    df_clclct['clcl'+str(j)+'('+str(p)+')']=model.labels_
+    df_clclct_cl = pd.merge(df_clclct_cl,df_clclct,how='left',left_index=True,right_index=True)
+
+df_clclct_cl.to_excel('cluster_cluster/cluster_cluster.xlsx')
