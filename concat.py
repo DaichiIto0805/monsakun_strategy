@@ -14,6 +14,7 @@ import itertools
 from decimal import Decimal, ROUND_HALF_UP, ROUND_HALF_EVEN
 import platform
 from scipy import stats
+
 import itertools
 
 import matplotlib.pyplot as plt
@@ -92,5 +93,6 @@ df6 = df6.set_index('InputID')
 df = df5.pivot(index='InputID',columns='q',values='strategy_jdg')
 df = pd.merge(df6,df,how='left',left_index=True,right_index=True)
 df = df.sort_values('counts',ascending=False)
+df5.to_csv('strategy_all_cross/all_mosnakun_all_check1.csv')
 df.to_csv('strategy_all_cross/strategy_all_cross.csv')
 # %%
