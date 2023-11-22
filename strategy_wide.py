@@ -47,11 +47,13 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_6.csv'
-df = pd.read_csv(fname,index_col=0)
+fname = 'strategy_wide/strategy_wide_5.csv'
+fnum = re.sub(r"\D","",fname)
+df = pd.read_csv(fname)
 df2 = df.copy()
-df = df.drop('day',axis=1)
-l = df.values.tolist()
+drop_col = ['InputID','day']
+df = df.drop(drop_col,axis=1)
+l = df.iloc[:,1:].values.tolist()
 l = list(itertools.chain.from_iterable(l))
 l = set(l)
 data_dict = {}
@@ -61,7 +63,6 @@ for char in l:
         data_dict[char] = len(data_dict) #data_dictのサイズを数値ラベルとして付与
 
 print(data_dict)
-
 df = df.replace(data_dict)
 #%%
 clus3col = []
@@ -73,21 +74,21 @@ for j in range(len(df.columns)//15):
     df_ct = df.iloc[:,j*15:j*15+15]
     df_ct = df_ct.dropna()
     for i in range(len(df_ct.columns)//5):
-        df_tt = df_ct.iloc[:,i*5:i*5+5]
-        if any(df_tt.columns.values[0] == col for col in clus3col):
+        df_ctt = df_ct.iloc[:,i*5:i*5+5]
+        if any(df_ctt.columns.values[0] == col for col in clus3col):
             p = 3
-        elif any(df_tt.columns.values[0] == co for co in clus2col):
+        elif any(df_ctt.columns.values[0] == co for co in clus2col):
             p = 2
         else:
             p = 2
         # X_distance = gower.gower_matrix(df_t)
         model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
         # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
-        model = model.fit(df_tt.values)
+        model = model.fit(df_ctt.values)
         plot_dendrogram(model,truncate_mode='lastp',p=p)
-        plt.title(df_tt.columns.values[0]+'with'+str(p)+'cluster')
-        plt.savefig('cluster_with_corate/'+df_tt.columns.values[0]+'_with_'+str(p)+'_cluster_corate')
-        plt.show(df_tt.columns.values[0]+str(p)+'cluster')
+        plt.title(df_ctt.columns.values[0]+'with'+str(p)+'cluster')
+        plt.savefig('strategy_wide/'+fnum+'_'+df_ctt.columns.values[0]+'_with_'+str(p)+'_cluster_st_wide')
+        plt.show(df_ctt.columns.values[0]+str(p)+'cluster')
         plt.clf()
 
         sse = []
@@ -95,7 +96,7 @@ for j in range(len(df.columns)//15):
 
         for k in k_values:
             kmeans = KMeans(n_clusters=k, random_state=42)
-            kmeans.fit(df_tt)
+            kmeans.fit(df_ctt)
             sse.append(kmeans.inertia_)
 
         # SSEをプロット
@@ -103,7 +104,8 @@ for j in range(len(df.columns)//15):
         plt.plot(k_values, sse, marker='o')
         plt.xlabel('Number of Clusters')
         plt.ylabel('SSE')
-        plt.title('Elbow Method For Optimal Number of Clusters'+df_tt.columns.values[0])
+        plt.title('Elbow Method For Optimal Number of Clusters'+fnum+'_'+df_ctt.columns.values[0])
+        plt.savefig('strategy_wide/Elbow_'+fnum+'_'+df_ctt.columns.values[0]+'.png')
         plt.show()
 #%%
 def inverse_dict(d):
@@ -112,8 +114,8 @@ def inverse_dict(d):
 #%%
 k = 0
 p = 3
-df_cl = df2['day']
-df_cl_cr = df2['day']
+df_cl = df2.loc[:,['InputID','day']]
+df_cl_cr = df2.loc[:,['InputID','day']]
 for j in range(len(df.columns)//15):
     df_t = df.iloc[:,j*15:j*15+15]
     df_t = df_t.dropna()
@@ -132,3 +134,5 @@ for j in range(len(df.columns)//15):
         k = k+1
 fnum = re.sub(r"\D","",fname)
 df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
+#%%%%%%%%%%%%
+print(df_cl_cr.index.values)
