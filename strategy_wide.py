@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_5.csv'
+fname = 'strategy_wide/strategy_wide_3.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -113,7 +113,7 @@ def inverse_dict(d):
 
 #%%
 k = 0
-p = 3
+p = 4
 df_cl = df2.loc[:,['InputID','day']]
 df_cl_cr = df2.loc[:,['InputID','day']]
 for j in range(len(df.columns)//15):
@@ -135,4 +135,41 @@ for j in range(len(df.columns)//15):
 fnum = re.sub(r"\D","",fname)
 df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
 #%%%%%%%%%%%%
-print(df_cl_cr.index.values)
+df1 = pd.read_csv('monsakun_log_03.csv')
+fname = 'strategy_wide/cluster_strategy_wide_3.csv'
+df2 = pd.read_csv(fname)
+df1 = df1[df1['ope1']=='CHECK']
+df1['No']=range(0,len(df1.index))
+df2 = df2.filter(regex ='^(cluster|InputID)',axis=1)
+fnum = re.sub(r'\D', '', fname)
+df4 = df.iloc[0:0]
+for i in range(3):
+    df1c = df1.copy()
+    df1c = df1c[df1c['lv']==i+1]
+    df2c = df2.copy()
+    df2c = df2c.loc[:,['InputID','cluster'+str(i)]]
+
+    df3 = pd.merge(df1c,df2c,how='left',on='InputID')
+    df3 = df3.rename(columns={'cluster'+str(i):'cluster'})
+    df4 = df4.append(df3)
+
+df4 = df4.sort_values('No')
+df4 = df4.filter(regex='^(cluster|lv|InputID|stp|asg)',axis=1)
+df4 = df4.dropna(subset=['cluster'])
+df4['cluster']=df4['cluster'].astype(pd.Int64Dtype(),errors='ignore')
+# df4['cluster'] = 'cl_' + df4['cluster'].astype(str)
+df4['lv_asg'] = df4['lv'].astype(str).str.cat(df4['asg'].astype(str),sep='_')
+
+for i in range(1,4):
+    df5 = df4[df4['lv']==i]
+    df6 = pd.pivot_table(df5,index='lv_asg',columns='cluster',values='stp')
+    print(df4.columns)
+    df6.plot(marker='.')
+    plt.ylabel('stp')
+    plt.title('file' + str(fnum)+'_lv'+str(i))
+    plt.savefig('strategy_wide/strategy_stp_file'+str(fnum)+'_lv'+str(i)+'.png')
+    plt.show()
+
+# df3 = pd.merge(df1,df2,how='left',on='InputID')
+# print(df2[['InputID','cluster0']])
+#%%%
