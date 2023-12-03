@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_3.csv'
+fname = 'strategy_wide/strategy_wide_4.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -75,12 +75,12 @@ for j in range(len(df.columns)//15):
     df_ct = df_ct.dropna()
     for i in range(len(df_ct.columns)//5):
         df_ctt = df_ct.iloc[:,i*5:i*5+5]
-        if any(df_ctt.columns.values[0] == col for col in clus3col):
-            p = 3
-        elif any(df_ctt.columns.values[0] == co for co in clus2col):
-            p = 2
-        else:
-            p = 2
+        # if any(df_ctt.columns.values[0] == col for col in clus3col):
+        #     p = 3
+        # elif any(df_ctt.columns.values[0] == co for co in clus2col):
+        #     p = 2
+        # else:
+        #     p = 2
         # X_distance = gower.gower_matrix(df_t)
         model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
         # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
@@ -130,19 +130,21 @@ for j in range(len(df.columns)//15):
         df_tt2['cluster'+str(k)]=model.labels_
         df_cl = pd.merge(df_cl,df_tt['cluster'+str(k)],how='left',left_index=True,right_index=True)
         df_cl_cr = pd.merge(df_cl_cr,df_tt2,how='left',left_index=True,right_index=True)
-        print(k)
+        print(k,p)
         k = k+1
 fnum = re.sub(r"\D","",fname)
+print(data_dict)
 df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
+
 #%%%%%%%%%%%%
-df1 = pd.read_csv('monsakun_log_03.csv')
-fname = 'strategy_wide/cluster_strategy_wide_3.csv'
+df1 = pd.read_csv('monsakun_log_04.csv')
+fname = 'strategy_wide/cluster_strategy_wide_4.csv'
 df2 = pd.read_csv(fname)
 df1 = df1[df1['ope1']=='CHECK']
 df1['No']=range(0,len(df1.index))
 df2 = df2.filter(regex ='^(cluster|InputID)',axis=1)
 fnum = re.sub(r'\D', '', fname)
-df4 = df.iloc[0:0]
+df4 = df1.iloc[0:0]
 for i in range(3):
     df1c = df1.copy()
     df1c = df1c[df1c['lv']==i+1]
@@ -172,4 +174,44 @@ for i in range(1,4):
 
 # df3 = pd.merge(df1,df2,how='left',on='InputID')
 # print(df2[['InputID','cluster0']])
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+from io import StringIO
+import plotly.graph_objects as go
 #%%%
+df4_1 = df4[['InputID','lv','cluster']].drop_duplicates()
+df7 = df4.pivot_table(index='InputID',columns='lv',values='cluster')
+df7 = df7.sort_values(by=[1,2,3])
+df7[1]=df7[1].astype(pd.Int64Dtype(),errors='ignore')
+df7[2]=df7[2].astype(pd.Int64Dtype(),errors='ignore')
+df7[3]=df7[3].astype(pd.Int64Dtype(),errors='ignore')
+df7[1]='1_'+df7[1].astype(str)
+df7[2]='2_'+df7[2].astype(str)
+df7[3]='3_'+df7[3].astype(str)
+df7 = df7.stack()
+# df7.reset_index(inplace=True)
+df8 = df7.reset_index()
+df8 = df8[['InputID',0]]
+df8['to']=df8[0].shift(-1)[df8['InputID']==df8['InputID'].shift(-1)].dropna()
+df8 = df8.rename(columns={0:'from'}).drop(columns=['InputID'])
+df8 = df8.dropna()
+df8 = df8.groupby(['from','to']).size().reset_index(name='value')
+# df7['to'] = df7[0].shift(-1)[df7['ID'] == df7['ID'].shift(-1)].dropna()
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+src,tgt,val = df8['from'].values,df8['to'].values,df8['value'].values
+
+lbl = {e:i for i,e in enumerate(sorted(set(src) | set(tgt)))}
+
+src = [lbl[e] for e in src]
+tgt = [lbl[e] for e in tgt]
+lbl = list(lbl.keys()) # 店名＝ノード名
+
+# 描画
+fig = go.Figure([go.Sankey(
+    node = dict( pad = 15, thickness = 20,
+        line = dict(color = "black", width = 1),
+        label = lbl, color = "blue" ),
+    link = dict( source = src, target = tgt, value = val))])
+fig.show()
+
+fig.write_image('strategy_wide/sankey_day'+str(fnum)+'.png')
+# %%
