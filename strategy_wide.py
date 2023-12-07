@@ -214,4 +214,3 @@ fig = go.Figure([go.Sankey(
 fig.show()
 
 fig.write_image('strategy_wide/sankey_day'+str(fnum)+'.png')
-# %%
