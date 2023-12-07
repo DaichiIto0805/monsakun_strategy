@@ -57,28 +57,6 @@ df = df.replace({'F*':0,'s':1,'r':2,'n':3})
 clus3col = ['4_2_1','5_1_1']
 # clus2col = ['4_3_1','5_3_1']
 clus2col = ['3_1_1']
-# for j in range(len(df.columns)//15):
-#     df_ct = df.iloc[:,j*15:j*15+15]
-#     df_ct = df_ct.dropna()
-#     for i in range(len(df_ct.columns)//5):
-#         df_tt = df_ct.iloc[:,i*5:i*5+5]
-#         if any(df_tt.columns.values[0] == col for col in clus3col):
-#             p = 3
-#         elif any(df_tt.columns.values[0] == co for co in clus2col):
-#             p = 2
-#         else:
-#             p = 4
-#         # X_distance = gower.gower_matrix(df_t)
-#         model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
-#         # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
-#         model = model.fit(df_tt.values)
-#         plot_dendrogram(model,truncate_mode='lastp',p=p)
-#         plt.title(df_tt.columns.values[0]+'with'+str(p)+'cluster')
-#         plt.savefig('cluster_with_corate/'+df_tt.columns.values[0]+'_with_'+str(p)+'_cluster_corate')
-#         plt.show(df_tt.columns.values[0]+str(p)+'cluster')
-#         plt.clf()
-
-
 #%%----------------------------------------------------------------
 df_cl = df2['counts']
 df_cl_cr = df2['counts']
@@ -97,9 +75,7 @@ for j in range(len(df.columns)//15):
             p = 4
         df_tt2 = df_tt.replace({0:'F*',1:'s',2:'r',3:'n'})
         model = AgglomerativeClustering(n_clusters=p)
-        # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
         model = model.fit(df_tt.values)
-        # plot_dendrogram(model,truncate_mode='lastp',p=3)
         df_tt['cluster'+str(k)+'('+str(p)+')']=model.labels_
         df_tt2['cluster'+str(k)+'('+str(p)+')']=model.labels_
         df_cl = pd.merge(df_cl,df_tt['cluster'+str(k)+'('+str(p)+')'],how='left',left_index=True,right_index=True)
@@ -116,20 +92,7 @@ df2 = df2.iloc[:,:4]
 df = df.drop(columns=['day','lv','asg','jdg'])
 #%%
 p=4
-# for j in range(len(df.columns)//15):
-#     df_ct = df.iloc[:,j*15:j*15+15]
-#     df_ct = df_ct.dropna()
-#     for i in range(len(df_ct.columns)//5):
-#         df_tt = df_ct.iloc[:,i*5:i*5+5]
-        # if any(df_tt.columns.values[0] == col for col in clus3col):
-        #     p = 3
-        # elif any(df_tt.columns.values[0] == co for co in clus2col):
-        #     p = 2
-        # else:
-        #     p = 4
-        # X_distance = gower.gower_matrix(df_t)
 model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
-# model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
 model = model.fit(df.values)
 plot_dendrogram(model,truncate_mode='lastp',p=p)
 plt.title('cluster_strategy_total_with'+str(p)+'cluster')
