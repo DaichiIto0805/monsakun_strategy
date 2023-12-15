@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_4.csv'
+fname = 'strategy_wide/strategy_wide_2.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -68,7 +68,7 @@ df = df.replace(data_dict)
 clus3col = []
 # clus2col = ['4_3_1','5_3_1']
 clus2col = []
-p=4
+p=6
 
 for j in range(len(df.columns)//15):
     df_ct = df.iloc[:,j*15:j*15+15]
@@ -113,7 +113,7 @@ def inverse_dict(d):
 
 #%%
 k = 0
-p = 4
+p = 6
 df_cl = df2.loc[:,['InputID','day']]
 df_cl_cr = df2.loc[:,['InputID','day']]
 for j in range(len(df.columns)//15):
@@ -134,11 +134,17 @@ for j in range(len(df.columns)//15):
         k = k+1
 fnum = re.sub(r"\D","",fname)
 print(data_dict)
-df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_5.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_7.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_8.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_9.csv')
+# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_10.csv')
+df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_6.csv')
 
 #%%%%%%%%%%%%
-df1 = pd.read_csv('monsakun_log_04.csv')
-fname = 'strategy_wide/cluster_strategy_wide_4.csv'
+df1 = pd.read_csv('monsakun_log_05.csv')
+fname = 'strategy_wide/cluster_strategy_wide_5.csv'
 df2 = pd.read_csv(fname)
 df1 = df1[df1['ope1']=='CHECK']
 df1['No']=range(0,len(df1.index))
@@ -214,3 +220,4 @@ fig = go.Figure([go.Sankey(
 fig.show()
 
 fig.write_image('strategy_wide/sankey_day'+str(fnum)+'.png')
+# %%
