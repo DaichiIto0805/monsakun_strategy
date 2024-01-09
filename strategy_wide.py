@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_2.csv'
+fname = 'strategy_wide/strategy_wide_5.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -113,7 +113,7 @@ def inverse_dict(d):
 
 #%%
 k = 0
-p = 6
+p = 13
 df_cl = df2.loc[:,['InputID','day']]
 df_cl_cr = df2.loc[:,['InputID','day']]
 for j in range(len(df.columns)//15):
@@ -140,7 +140,7 @@ print(data_dict)
 # df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_8.csv')
 # df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_9.csv')
 # df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_10.csv')
-df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_6.csv')
+df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'.csv')
 
 #%%%%%%%%%%%%
 df1 = pd.read_csv('monsakun_log_05.csv')
@@ -175,7 +175,7 @@ for i in range(1,4):
     df6.plot(marker='.')
     plt.ylabel('stp')
     plt.title('file' + str(fnum)+'_lv'+str(i))
-    plt.savefig('strategy_wide/strategy_stp_file'+str(fnum)+'_lv'+str(i)+'.png')
+    plt.savefig('strategy_wide/strategy_stp_file_meaning'+str(fnum)+'_lv'+str(i)+'.png')
     plt.show()
 
 # df3 = pd.merge(df1,df2,how='left',on='InputID')
