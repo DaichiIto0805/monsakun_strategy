@@ -68,3 +68,10 @@ for i in range(3):
 
 
 # %%
+l = glob.iglob('strategy_wide/cluster_strategy_ratio?_lv_?_.csv')
+for i in l:
+    m = re.findall(r'\d+',i)[0]
+    m2 = re.findall(r'\d+',i)[1]
+    df0 = pd.read_csv(i,index_col=0)
+    df100 = df0 * 100
+    df100.to_csv('strategy_wide/cluster_strategy_ratio_'+str(m)+'_lv_'+str(m2)+'_100.csv')
