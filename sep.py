@@ -25,7 +25,7 @@ from sklearn.preprocessing import StandardScaler
 # K-Prototypeクラスタリング
 from kmodes.kprototypes import KPrototypes
 # Gower距離
-import gower
+# import gower
 # 階層クラスタリング
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import LabelEncoder
@@ -33,7 +33,7 @@ from scipy.cluster.hierarchy import dendrogram
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 from sklearn.preprocessing import LabelEncoder
 #%%
-fname = "./strategy_wide/cluster_strategy_wide_4.csv"
+fname = "./strategy_wide/cluster_strategy_wide_5_meaning.csv"
 fnum = re.sub(r'\D', '', fname)
 df = pd.read_csv(fname,index_col=0)
 df = df.sort_index()
@@ -65,6 +65,7 @@ for i in range(3):
     for col in grouped_sum[:-1]:
         df3[col] = grouped_sum[col]/grouped_size
     df3.to_csv('strategy_wide/cluster_strategy_ratio'+str(fnum)+'_lv_'+str(i+1)+'_.csv')
+    grouped_sum.to_csv('strategy_wide/cluster_strategy_hist'+str(fnum)+'_lv_'+str(i+1)+'_.csv')
 
 
 # %%
