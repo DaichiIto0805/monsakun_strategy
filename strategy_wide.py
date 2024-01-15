@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_5.csv'
+fname = 'strategy_wide/strategy_wide_3.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -75,13 +75,6 @@ for j in range(len(df.columns)//15):
     df_ct = df_ct.dropna()
     for i in range(len(df_ct.columns)//5):
         df_ctt = df_ct.iloc[:,i*5:i*5+5]
-        # if any(df_ctt.columns.values[0] == col for col in clus3col):
-        #     p = 3
-        # elif any(df_ctt.columns.values[0] == co for co in clus2col):
-        #     p = 2
-        # else:
-        #     p = 2
-        # X_distance = gower.gower_matrix(df_t)
         model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
         # model = AgglomerativeClustering(distance_threshold=0,n_clusters=None)
         model = model.fit(df_ctt.values)
@@ -113,7 +106,6 @@ def inverse_dict(d):
 
 #%%
 k = 0
-p = 13
 df_cl = df2.loc[:,['InputID','day']]
 df_cl_cr = df2.loc[:,['InputID','day']]
 for j in range(len(df.columns)//15):
@@ -134,13 +126,8 @@ for j in range(len(df.columns)//15):
         k = k+1
 fnum = re.sub(r"\D","",fname)
 print(data_dict)
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'.csv')
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_5.csv')
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_7.csv')
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_8.csv')
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_9.csv')
-# df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_10.csv')
-df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'.csv')
+df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'clusters.csv')
+df_cl_cr.to_excel('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'clusters.xlsx')
 
 #%%%%%%%%%%%%
 df1 = pd.read_csv('monsakun_log_05.csv')
@@ -178,8 +165,6 @@ for i in range(1,4):
     plt.savefig('strategy_wide/strategy_stp_file_meaning'+str(fnum)+'_lv'+str(i)+'.png')
     plt.show()
 
-# df3 = pd.merge(df1,df2,how='left',on='InputID')
-# print(df2[['InputID','cluster0']])
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 from io import StringIO
 import plotly.graph_objects as go

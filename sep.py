@@ -76,3 +76,42 @@ for i in l:
     df0 = pd.read_csv(i,index_col=0)
     df100 = df0 * 100
     df100.to_csv('strategy_wide/cluster_strategy_ratio_'+str(m)+'_lv_'+str(m2)+'_100.csv')
+#%%
+l = glob.glob('strategy_wide/cluster_strategy_hist?_lv_?_.csv')
+print(l[0])
+for i in l:
+    fnum = re.sub(r'\D', '', i)
+    df_sum = pd.read_csv(i)
+    sum_F = df_sum.filter(regex='F$').sum(axis=1)
+    sum_S = df_sum.filter(regex='S$').sum(axis=1)
+    sum_R = df_sum.filter(regex='R$').sum(axis=1)
+    df_sum = pd.concat([sum_F,sum_S, sum_R],axis=1)
+    df_sum.rename(columns={0:'F',1:'S',2:'R'},inplace=True)
+    df_sum['sum'] = df_sum.sum(axis=1)
+    df_sum = df_sum.sort_values('sum',ascending=False)
+    df_sum = df_sum.iloc[:3,:3]
+    df_sum = df_sum.sort_index()
+    print(fnum)
+    df_sum.to_csv('strategy_hist_sum/strategy_hist_sum_'+str(fnum[0])+'lv_'+str(fnum[1])+'.csv')
+
+#%%
+from chi import residual_analysis
+import os
+l = glob.glob('strategy_hist_sum/strategy_hist_sum*')
+for i in l:
+    fnum = re.sub(r'\D', '', i)
+    df_chi = pd.read_csv(i,index_col=0)
+    print(os.path.split(i)[1])
+    pairs = residual_analysis(table=df_chi,p_value=0.05)
+    print(pairs)
+
+    for j in range(1,len(df_chi.columns)+1):
+        df_chi.insert(j*2-1,'re'+df_chi.columns.values[(j-1)*2],'')
+
+    for y in df_chi.columns:
+        for x in (df_chi.index):
+            for p in pairs:
+                if p[0] == x and p[1] == y:
+                    df_chi.iloc[df_chi.index.get_loc(x),df_chi.columns.get_loc(y)+1] = p[2]
+    df_chi.to_csv('./strategy_hist_sum/residual_analysis_'+str(fnum[0])+'_lv_'+str(fnum[1])+'.csv')
+# %%
