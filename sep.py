@@ -113,5 +113,5 @@ for i in l:
             for p in pairs:
                 if p[0] == x and p[1] == y:
                     df_chi.iloc[df_chi.index.get_loc(x),df_chi.columns.get_loc(y)+1] = p[2]
-    df_chi.to_csv('./strategy_hist_sum/residual_analysis_'+str(fnum[0])+'_lv_'+str(fnum[1])+'.csv')
+    df_chi.to_excel('./strategy_hist_sum/residual_analysis_'+str(fnum[0])+'_lv_'+str(fnum[1])+'.xlsx')
 # %%
