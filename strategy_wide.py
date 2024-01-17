@@ -47,7 +47,7 @@ def plot_dendrogram(model, **kwargs):
     linkage_matrix = np.column_stack([model.children_, model.distances_, counts]).astype(float)
     dendrogram(linkage_matrix, **kwargs)
 #%%
-fname = 'strategy_wide/strategy_wide_3.csv'
+fname = 'strategy_wide/strategy_wide_4.csv'
 fnum = re.sub(r"\D","",fname)
 df = pd.read_csv(fname)
 df2 = df.copy()
@@ -68,7 +68,7 @@ df = df.replace(data_dict)
 clus3col = []
 # clus2col = ['4_3_1','5_3_1']
 clus2col = []
-p=6
+p=12
 
 for j in range(len(df.columns)//15):
     df_ct = df.iloc[:,j*15:j*15+15]

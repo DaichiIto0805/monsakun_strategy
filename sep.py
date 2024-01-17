@@ -33,7 +33,7 @@ from scipy.cluster.hierarchy import dendrogram
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 from sklearn.preprocessing import LabelEncoder
 #%%
-fname = "./strategy_wide/cluster_strategy_wide_5_meaning.csv"
+fname = "./strategy_wide/cluster_strategy_wide_4_meaning.csv"
 fnum = re.sub(r'\D', '', fname)
 df = pd.read_csv(fname,index_col=0)
 df = df.sort_index()
@@ -77,8 +77,7 @@ for i in l:
     df100 = df0 * 100
     df100.to_csv('strategy_wide/cluster_strategy_ratio_'+str(m)+'_lv_'+str(m2)+'_100.csv')
 #%%
-l = glob.glob('strategy_wide/cluster_strategy_hist?_lv_?_.csv')
-print(l[0])
+l = glob.glob('strategy_wide/cluster_strategy_hist4_lv_?_.csv')
 for i in l:
     fnum = re.sub(r'\D', '', i)
     df_sum = pd.read_csv(i)
@@ -97,12 +96,20 @@ for i in l:
 #%%
 from chi import residual_analysis
 import os
-l = glob.glob('strategy_hist_sum/strategy_hist_sum*')
+l = glob.glob('strategy_hist_sum/strategy_hist_sum_4*')
+print(l)
 for i in l:
+
     fnum = re.sub(r'\D', '', i)
     df_chi = pd.read_csv(i,index_col=0)
     print(os.path.split(i)[1])
-    pairs = residual_analysis(table=df_chi,p_value=0.05)
+    if fnum[0] == '2' and fnum[1] == '2':
+        df_chi = df_chi.loc['1':'2']
+
+    try :
+        pairs = residual_analysis(table=df_chi,p_value=0.05)
+    except ValueError as e :
+        print(e)
     print(pairs)
 
     for j in range(1,len(df_chi.columns)+1):
@@ -113,5 +120,8 @@ for i in l:
             for p in pairs:
                 if p[0] == x and p[1] == y:
                     df_chi.iloc[df_chi.index.get_loc(x),df_chi.columns.get_loc(y)+1] = p[2]
+
+    df_chi.index.name = str(fnum[0]) + '_' + str(fnum[1])
     df_chi.to_excel('./strategy_hist_sum/residual_analysis_'+str(fnum[0])+'_lv_'+str(fnum[1])+'.xlsx')
+
 # %%
