@@ -31,13 +31,13 @@ from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import LabelEncoder
 from scipy.cluster.hierarchy import dendrogram
 #%%
-df1 = pd.read_csv('monsakun_log_04.csv')
+df1 = pd.read_csv('monsakun_log_02.csv')
 df1 = df1.query('ope1 in ["CHECK"]')
 df1 = df1.loc[:,['InputID','check','lv','asg']]
 df1_lv1 = df1.query('lv in [1]')
 df1_lv2 = df1.query('lv in [2]')
 df1_lv3 = df1.query('lv in [3]')
-df2 = pd.read_csv('strategy_wide/cluster_strategy_wide_4_meaning.csv',index_col=0)
+df2 = pd.read_csv('strategy_wide/cluster_strategy_wide_2_meaning.csv',index_col=0)
 df2 = df2.sort_index()
 df1_lv1 = pd.merge(df1_lv1,df2.loc[:,['InputID','cluster0']],on='InputID')
 df1_lv1 = df1_lv1.loc[:,['cluster0','check','asg']].groupby(['cluster0','asg'],as_index=False).mean()
@@ -49,7 +49,7 @@ lv1_piv = df1_lv1.pivot(index='cluster0',columns='asg',values='check')
 lv2_piv = df1_lv2.pivot(index='cluster1',columns='asg',values='check')
 lv3_piv = df1_lv3.pivot(index='cluster2',columns='asg',values='check')
 # %%
-l = glob.glob('strategy_hist_sum/residual_analysis_4_lv_?.xlsx')
+l = glob.glob('strategy_hist_sum/residual_analysis_2_lv_?.xlsx')
 for x,j in enumerate([df1_lv1,df1_lv2,df1_lv3]):
 
     print(l[x])
@@ -76,11 +76,12 @@ for x,i in enumerate([lv1_piv,lv2_piv,lv3_piv]):
     y_col = i.index.values
     i2 = i.T
     i2= i2.reset_index()
-    i2.plot(x="asg",y=y_col,kind='bar')
+    i2.plot(x="asg",y=y_col,kind='box')
+    # i2.plot(x="asg",y=y_col,kind='bar')
     # i2.plot(x="asg",y=y_col)
     plt.title(fnum[0]+'_'+fnum[1])
     plt.grid(axis='y',linestyle='dotted')
-    plt.savefig('strategy_hist_sum/check_mean/check_mean_'+fnum[0]+'_'+fnum[1]+'.png')
+    plt.savefig('strategy_hist_sum/check_mean/check_mean_'+fnum[0]+'_'+fnum[1]+'_box.png')
     plt.show()
     plt.clf()
     plt.close()

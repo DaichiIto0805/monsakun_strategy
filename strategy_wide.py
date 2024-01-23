@@ -130,8 +130,8 @@ df_cl_cr.to_csv('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'clusters
 df_cl_cr.to_excel('strategy_wide/cluster_strategy_wide_'+fnum+'_'+str(p)+'clusters.xlsx')
 
 #%%%%%%%%%%%%
-df1 = pd.read_csv('monsakun_log_05.csv')
-fname = 'strategy_wide/cluster_strategy_wide_5.csv'
+df1 = pd.read_csv('monsakun_log_04.csv')
+fname = 'strategy_wide/cluster_strategy_wide_4_meaning.csv'
 df2 = pd.read_csv(fname)
 df1 = df1[df1['ope1']=='CHECK']
 df1['No']=range(0,len(df1.index))
