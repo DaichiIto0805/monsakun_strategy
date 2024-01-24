@@ -25,7 +25,7 @@ from sklearn.preprocessing import StandardScaler
 # K-Prototypeクラスタリング
 from kmodes.kprototypes import KPrototypes
 # Gower距離
-import gower
+# import gower
 # 階層クラスタリング
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.preprocessing import LabelEncoder
@@ -93,13 +93,13 @@ for i in l:
 #%%
 import seaborn as sns
 #%%
-fnames = glob.glob('strategy_sep/cluster_strategy_sep_?.csv')
+fnames = glob.glob('strategy_sep/cluster_strategy_sep_5.csv')
 for f in fnames:
     dfcl2 = pd.read_csv(f,index_col=0)
     fnum = re.sub(r'\D', '', f)
     df1 = pd.read_csv('monsakun_log_0'+str(fnum)+'.csv')
     df1 = df1.query('ope1 in ["CHECK"]')
-    df1 = df1.loc[:,['InputID','check','lv']]
+    df1 = df1.loc[:,['InputID','check','lv','asg']]
     df1_lv1 = df1.query('lv in [1]')
     df1_lv2 = df1.query('lv in [2]')
     df1_lv3 = df1.query('lv in [3]')
@@ -122,11 +122,36 @@ for f in fnames:
     dflv = dflv.sort_values(by=['lv','cluster'])
     dflv = dflv.reindex(columns=['lv','cluster','check'])
     dflv_mean = dflv.groupby(['lv','cluster'])['check'].mean()
-    plt.style.use('dark_background')
-    sns.boxplot(x='lv',y='check',hue='cluster',data=dflv)
-    plt.title('cluster_check'+str(fnum))
-    plt.savefig('strategy_sep/imgs/cluster_check_'+fnum+'.png')
+    # sns.boxplot(x='lv',y='check',hue='cluster',data=dflv)
+    # plt.title('cluster_check'+str(fnum))
+    # plt.savefig('strategy_sep/imgs/cluster_check_'+fnum+'.png')
+    # plt.show()
+    # print(dflv_mean)
+    # plt.clf()
+    
+    # sns.boxplot(x='lv',y='check',hue='cluster',data=df1_lv1)
+    # plt.title('cluster_check'+str(fnum))
+    # plt.savefig('strategy_sep/imgs/cluster_check_'+fnum+'_lv1.png')
+    # plt.show()
+    # print(dflv_mean)
+    # plt.clf()
+    # sns.boxplot(x='lv',y='check',hue='cluster',data=df1_lv2)
+    # plt.title('cluster_check'+str(fnum)+'lv2')
+    # plt.savefig('strategy_sep/imgs/cluster_check_'+fnum+'_lv2.png')
+    # plt.show()
+    # print(dflv_mean)
+    # plt.clf()
+
+    sns.lineplot(x='asg',y='check',hue='cluster',data=df1_lv3)
+    # df1_lv3.plot()
     plt.show()
-    print(dflv_mean)
+    plt.style.use('default')
     plt.clf()
+# %%
+import scikit_posthocs as sp
+
+
+# display(sp.posthoc_dscf(df1_lv3.query('cluster in [1,3]'), val_col='check', group_col='cluster'))
+display(sp.posthoc_dscf(df1_lv3, val_col='check', group_col='cluster'))
+display(df1_lv3.groupby('cluster').describe())
 # %%
