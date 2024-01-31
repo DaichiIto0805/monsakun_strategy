@@ -24,6 +24,7 @@ from matplotlib.ticker import MaxNLocator
 from sklearn.preprocessing import StandardScaler
 # K-Prototypeクラスタリング
 from kmodes.kprototypes import KPrototypes
+import scikit_posthocs as sp
 # Gower距離
 # import gower
 # 階層クラスタリング
@@ -60,7 +61,6 @@ from chi import residual_analysis
 p = 4
 l = glob.glob('strategy_sep/strategy_sep_count_*')
 for i in l:
-    print(i)
     dfcl = pd.read_csv(i,index_col=0)
     fnum = re.sub(r'\D', '', i)
     dfcl2 = dfcl.loc[:,['InputID','day']]
@@ -69,31 +69,36 @@ for i in l:
         dfclel = dfcl.iloc[:,j*3:(j*3)+3]
         model = AgglomerativeClustering(n_clusters=p)
         model = model.fit(dfclel.values)
-        dfclel.loc[:,'cluster'+str(j)] = model.labels_
+        # dfclel.loc[:,'cluster'+str(j)] = model.labels_
+        dfclel = dfclel.assign(**{"cluster"+str(j):model.labels_})
         dfcl2 = pd.concat([dfcl2,dfclel],axis=1)
         dfred = dfclel.groupby('cluster'+str(j)).sum()
-        try :
-            pairs = residual_analysis(table=dfred,p_value=0.05)
-        except ValueError as e :
-            print(e)
-        # print(pairs)
+        dfratio = dfclel.groupby('cluster'+str(j))[[str(j+1)+'_F',str(j+1)+'_S',str(j+1)+'_R']].apply(lambda x: x.sum() / x.count())
+        for inde,t in enumerate([dfred,dfratio]):
+            try :
+                print(i,j+1)
+                pairs = residual_analysis(table=t,p_value=0.05)
+            except ValueError as e :
+                print(e)
 
-        for k in range(1,len(dfred.columns)+1):
-            dfred.insert(k*2-1,'re'+dfred.columns.values[(k-1)*2],'')
-
-        for y in dfred.columns:
-            for x in (dfred.index):
-                for pair in pairs:
-                    if pair[0] == x and pair[1] == y:
-                            dfred.iloc[dfred.index.get_loc(x),dfred.columns.get_loc(y)+1] = pair[2]
-
-        dfred.to_excel('strategy_sep/residual_analysis/residual_analysis_'+str(fnum)+'_lv_'+str(j+1)+'.xlsx')
+            for k in range(1,len(t.columns)+1):
+                t.insert(k*2-1,'re'+t.columns.values[(k-1)*2],'')
+            if pairs != 0:
+                for y in t.columns:
+                    for x in (t.index):
+                        for pair in pairs:
+                            if pair[0] == x and pair[1] == y:
+                                    t.iloc[t.index.get_loc(x),t.columns.get_loc(y)+1] = pair[2]
+            if inde ==0 :
+                t.to_excel('strategy_sep/residual_analysis/residual_analysis_sum_'+str(fnum)+'_lv_'+str(j+1)+'.xlsx')
+            else:
+                t.to_excel('strategy_sep/residual_analysis/residual_analysis_ratio_'+str(fnum)+'_lv_'+str(j+1)+'.xlsx')
 
     dfcl2.to_csv('./strategy_sep/cluster_strategy_sep_'+str(fnum)+'.csv')
 #%%
 import seaborn as sns
 #%%
-fnames = glob.glob('strategy_sep/cluster_strategy_sep_5.csv')
+fnames = glob.glob('strategy_sep/cluster_strategy_sep_*.csv')
 for f in fnames:
     dfcl2 = pd.read_csv(f,index_col=0)
     fnum = re.sub(r'\D', '', f)
@@ -123,19 +128,75 @@ for f in fnames:
     plt.title('cluster_check'+str(fnum))
     plt.savefig('strategy_sep/imgs/cluster_check_'+fnum+'.png')
     plt.show()
-    print(dflv_mean)
     plt.clf()
 
-    sns.lineplot(x='asg',y='check',hue='cluster',data=df1_lv3)
-    # df1_lv3.plot()
+    plt.title('cluster_check'+str(fnum))
+    xlabels = df1_lv3.loc[:,'asg'].unique()
+    df1_lv3_mean = df1_lv3.groupby(['cluster','asg']).mean()
+    df1_lv3_mean = df1_lv3_mean.reset_index()
+    # sns.lineplot(x='asg',y='check',hue='cluster',data=df1_lv3_mean)
+    df1_lv3_mean = df1_lv3_mean.loc[:,['asg','cluster','check']]
+    df1_lv3_mean = df1_lv3_mean.pivot(index= 'asg',columns = 'cluster',values = 'check')
+    plt.xticks(xlabels,xlabels)
+    df1_lv3_mean.plot()
+    plt.savefig('strategy_sep/imgs/cluster_check_bar_'+fnum+'.png')
     plt.show()
-    plt.style.use('default')
     plt.clf()
-# %%
-import scikit_posthocs as sp
 
-
-# display(sp.posthoc_dscf(df1_lv3.query('cluster in [1,3]'), val_col='check', group_col='cluster'))
-display(sp.posthoc_dscf(df1_lv3, val_col='check', group_col='cluster'))
-display(df1_lv3.groupby('cluster').describe())
+##分散分析
+    dfsp = sp.posthoc_dscf(df1_lv3, val_col='check', group_col='cluster')
+    dfsp.to_excel('strategy_sep/posthoc_dscf/posthoc_dscf'+str(fnum)+'.xlsx')
+    print(df1_lv3.groupby('cluster').describe())
 # %%
+lists = glob.glob('strategy_sep/cluster_strategy_sep_?.csv')
+for l in lists:
+    fnum = re.sub(r'\D', '', l)
+    print(l)
+    dfs = pd.read_csv(l,index_col=0)
+    dfs = dfs.loc[:,['InputID','cluster0','cluster1','cluster2']]
+    dfs1 = dfs.loc[:,['InputID','cluster0']]
+    dfs1['lv'] = 1
+    dfs1 = dfs1.rename(columns={'cluster0':'cluster'})
+    dfs2 = dfs.loc[:,['InputID','cluster1']]
+    dfs2['lv'] = 2
+    dfs2 = dfs2.rename(columns={'cluster1':'cluster'})
+    dfs3 = dfs.loc[:,['InputID','cluster2']]
+    dfs3['lv'] = 3
+    dfs3 = dfs3.rename(columns={'cluster2':'cluster'})
+
+    dfs = pd.concat([dfs1,dfs2,dfs3],axis=0)
+
+    df7 = dfs.pivot_table(index='InputID',columns='lv',values='cluster')
+    df7 = df7.sort_values(by=[1,2,3])
+    df7[1]=df7[1].astype(pd.Int64Dtype(),errors='ignore')
+    df7[2]=df7[2].astype(pd.Int64Dtype(),errors='ignore')
+    df7[3]=df7[3].astype(pd.Int64Dtype(),errors='ignore')
+    df7[1]='1_'+df7[1].astype(str)
+    df7[2]='2_'+df7[2].astype(str)
+    df7[3]='3_'+df7[3].astype(str)
+    df7 = df7.stack()
+
+    df8 = df7.reset_index()
+    df8 = df8[['InputID',0]]
+    df8['to']=df8[0].shift(-1)[df8['InputID']==df8['InputID'].shift(-1)].dropna()
+    df8 = df8.rename(columns={0:'from'}).drop(columns=['InputID'])
+    df8 = df8.dropna()
+    df8 = df8.groupby(['from','to']).size().reset_index(name='value')
+
+    src,tgt,val = df8['from'].values,df8['to'].values,df8['value'].values
+
+    lbl = {e:i for i,e in enumerate(sorted(set(src) | set(tgt)))}
+
+    src = [lbl[e] for e in src]
+    tgt = [lbl[e] for e in tgt]
+    lbl = list(lbl.keys()) # 店名＝ノード名
+
+    # 描画
+    fig = go.Figure([go.Sankey(
+        node = dict( pad = 15, thickness = 20,
+            line = dict(color = "black", width = 1),
+            label = lbl, color = "blue" ),
+        link = dict( source = src, target = tgt, value = val))])
+    fig.show()
+
+    fig.write_image('strategy_sep/sankey/sankey_'+str(fnum)+'.png')

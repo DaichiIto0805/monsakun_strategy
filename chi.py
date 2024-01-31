@@ -63,6 +63,9 @@ def residual_analysis(table: pd.DataFrame, p_value: int=0.05):
                     pairs.append((index[i], column[j],'▲'))
                 elif np_data[i][j]<exp[i][j]:
                     pairs.append((index[i], column[j],'▽'))
-    return pairs
+    if chi_p_value < p_value:
+        return pairs
+    else :
+        return 0
 
 # %%
