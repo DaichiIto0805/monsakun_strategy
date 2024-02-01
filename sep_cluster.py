@@ -80,7 +80,8 @@ for i in l:
                 pairs = residual_analysis(table=t,p_value=0.05)
             except ValueError as e :
                 print(e)
-
+            if inde == 1:
+                t.to_csv('strategy_sep/strategy_sep_ratio/strategy_sep_ratio_'+str(fnum)+'_'+str(j+1)+'.csv')
             for k in range(1,len(t.columns)+1):
                 t.insert(k*2-1,'re'+t.columns.values[(k-1)*2],'')
             if pairs != 0:
@@ -143,7 +144,7 @@ for f in fnames:
     plt.show()
     plt.clf()
 
-##分散分析
+#!TODO分散分析
     dfsp = sp.posthoc_dscf(df1_lv3, val_col='check', group_col='cluster')
     dfsp.to_excel('strategy_sep/posthoc_dscf/posthoc_dscf'+str(fnum)+'.xlsx')
     print(df1_lv3.groupby('cluster').describe())
@@ -200,3 +201,16 @@ for l in lists:
     fig.show()
 
     fig.write_image('strategy_sep/sankey/sankey_'+str(fnum)+'.png')
+#%%
+ls = glob.glob('strategy_sep\cluster_strategy_sep_?.csv')
+for l in ls:
+    fnum = re.sub(r'\D', '', l)
+    df = pd.read_csv(l,index_col=0)
+    df = df.loc[:,['InputID','3_F','3_S','3_R','cluster2']]
+    df = df.melt(id_vars=['InputID','cluster2'], var_name='st', value_name='value')
+    df = df.drop('InputID',axis=1)
+    sns.boxplot(x='cluster2',y='value',hue='st',data=df)
+    plt.title('day'+str(fnum)+'_lv3')
+    plt.savefig('strategy_sep\startegy_box/strategy_box_'+str(fnum)+'.png')
+    plt.show()
+    plt.clf()
